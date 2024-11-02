@@ -574,3 +574,7 @@
 .footer .copyright a:hover {
     color: var(--primary);
 }
+div.container-fluid.bg-light.overflow-hidden.my-5.px-lg-0{
+
+    margin: 4px 0px;
+}
