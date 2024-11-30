@@ -113,7 +113,7 @@ let ready = () => {
 
 
 window.addEventListener("DOMContentLoaded", () => {
-    getData(); // Carga los datos al iniciar la página
+    getData(); // Carga al inicio
     ready(); 
 });
 window.addEventListener("load", loaded)
