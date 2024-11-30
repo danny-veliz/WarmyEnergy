@@ -1,13 +1,17 @@
 const databaseURL = 'https://consultora-de-proyectos-default-rtdb.firebaseio.com/warmiEnergy.json';
 let sendData = () => {
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries());
+    const form = document.getElementById('form');
+    const formData = new FormData(form); // Captura los datos del formulario
+    const data = Object.fromEntries(formData.entries()); // Convierte FormData a un objeto
+
+    // Agrega la fecha y hora actual al objeto
     data['saved'] = new Date().toLocaleString('es-CO', { timeZone: 'America/Guayaquil' });
 
+    // Envía los datos a Firebase
     fetch(databaseURL, {
-        method: 'POST', // Método de la solicitud
+        method: 'POST', // Método HTTP
         headers: {
-            'Content-Type': 'application/json' // Especifica que los datos están en formato JSON
+            'Content-Type': 'application/json' // Especifica el formato JSON
         },
         body: JSON.stringify(data) // Convierte los datos a JSON
     })
@@ -18,14 +22,15 @@ let sendData = () => {
             return response.json(); // Procesa la respuesta como JSON
         })
         .then(result => {
-            alert('Agradeciendo tu preferencia, nos mantenemos actualizados y enfocados en atenderte como mereces'); // Maneja la respuesta con un mensaje
-            form.reset()
+            alert('¡Datos guardados exitosamente!'); // Mensaje de éxito
+            form.reset(); // Reinicia el formulario
         })
         .catch(error => {
-            alert('Hemos experimentado un error. ¡Vuelve pronto!'); // Maneja el error con un mensaje
+            alert('Hemos experimentado un error. ¡Vuelve pronto!'); // Manejo de errores
         });
-    //getData()
-}
+        //getData()
+};
+
 /*
 let getData = async () => {
     try {
