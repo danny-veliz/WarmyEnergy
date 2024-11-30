@@ -24,6 +24,7 @@ let sendData = () => {
         .then(result => {
             alert('¡Datos guardados exitosamente!'); // Mensaje de éxito
             form.reset(); // Reinicia el formulario
+            getData();
         })
         .catch(error => {
             alert('Hemos experimentado un error. ¡Vuelve pronto!'); // Manejo de errores
@@ -31,65 +32,48 @@ let sendData = () => {
         //getData()
 };
 
-/*
+
 let getData = async () => {
     try {
-
-        // Realiza la petición fetch a la URL de la base de datos
+        // Realiza la petición a Firebase
         const response = await fetch(databaseURL);
-
-        // Verifica si la respuesta es exitosa
         if (!response.ok) {
-            alert('Hemos experimentado un error. ¡Vuelve pronto!'); // Maneja el error con un mensaje
+            throw new Error(`Error en la solicitud: ${response.statusText}`);
         }
 
-        // Convierte la respuesta en formato JSON
+        // Convierte la respuesta a un objeto JSON
         const data = await response.json();
 
-        if (data != null) {
+        // Verifica si hay datos disponibles
+        if (data) {
+            const tableBody = document.querySelector('#data-table tbody');
+            tableBody.innerHTML = ''; // Limpia la tabla antes de agregar nuevos datos
 
-            // Cuente el número de suscriptores registrados por fecha a partir del objeto data
+            // Itera sobre los datos y crea filas para la tabla
+            let index = 1;
+            for (let key in data) {
+                const { nombre, correo, celular, servicio, comentario, saved } = data[key];
 
-            // Cuente el número de suscriptores registrados por fecha a partir del objeto data
-            let countSuscribers = new Map()
+                const row = `
+                    <tr>
+                        <td>${index++}</td>
+                        <td>${nombre || ''}</td>
+                        <td>${correo || ''}</td>
+                        <td>${celular || ''}</td>
+                        <td>${servicio || ''}</td>
+                        <td>${comentario || ''}</td>
+                        <td>${saved || ''}</td>
+                    </tr>
+                `;
 
-            if (Object.keys(data).length > 0) {
-                for (let key in data) {
-
-                    let { email, saved } = data[key]
-
-                    let date = saved.split(",")[0]
-
-                    let count = countSuscribers.get(date) || 0;
-                    countSuscribers.set(date, count + 1)
-                }
-
-                // Genere y agregue filas de una tabla HTML para mostrar fechas y cantidades de suscriptores almacenadas
-
-                if (countSuscribers.size > 0) {
-
-                    subscribers.innerHTML = ''
-
-                    for (let [date, count] of countSuscribers) {
-                        let rowTemplate = `
-<tr>
-<th scope="row">1</th>
-<td>${date}</td>
-<td>${count}</td>
-</tr>`
-                        subscribers.innerHTML += rowTemplate
-                    }
-                }
-
+                tableBody.innerHTML += row; // Agrega la fila a la tabla
             }
-
         }
     } catch (error) {
-        // Muestra cualquier error que ocurra durante la petición
-        alert('Hemos experimentado un error. ¡Vuelve pronto!'); // Maneja el error con un mensaje
+        alert('Error al cargar los datos: ' + error.message); // Muestra un mensaje de error
     }
-}
-    */
+};
+    
 let loaded = (eventLoaded) => {
 
     let myform = document.getElementById('form');
@@ -128,6 +112,8 @@ let ready = () => {
 
 
 
-
-window.addEventListener("DOMContentLoaded", ready);
+window.addEventListener("DOMContentLoaded", () => {
+    getData(); // Carga los datos al iniciar la página
+    ready(); 
+});
 window.addEventListener("load", loaded)
